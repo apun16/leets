@@ -1,2 +1,2 @@
-# programming
+# LeetSync
 leetcoding away
