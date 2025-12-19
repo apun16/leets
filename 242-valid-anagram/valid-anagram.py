@@ -13,6 +13,8 @@ class Solution(object):
         can also use collections class but i want to code it myself to learn
         from collections import Counter
         return Counter(s) == Counter(t)
+
+        can also use set and hashmaps
         """
         count_s = {}
         count_t = {}
