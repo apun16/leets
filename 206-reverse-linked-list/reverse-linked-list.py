@@ -22,4 +22,17 @@ class Solution(object):
 
     """ 
     recursion
+
+    optimal:
+    prev = None 
+        cur = head
+
+        while cur:
+
+            next = cur.next
+            cur.next = prev
+            prev = cur
+            cur = next
+        
+        return prev
     """
