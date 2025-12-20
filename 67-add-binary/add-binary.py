@@ -5,7 +5,10 @@ class Solution(object):
         :type b: str
         :rtype: str
         """
-        
+    
+        return bin(int(a, 2) + int(b, 2))[2:]
+
+        """
         result = []
         carry = 0
         i, j = len(a) - 1, len(b) - 1
@@ -24,3 +27,4 @@ class Solution(object):
             carry = total / 2 
         
         return ''.join(result[::-1])
+        """
