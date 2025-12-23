@@ -4,11 +4,10 @@ class Solution(object):
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        groups = defaultdict(list) 
-        for word in strs: 
-            count = [0] * 26 
-            for c in word: 
-                count[ord(c) - ord('a')] += 1 
-            groups[tuple(count)].append(word) 
+        groups = defaultdict(list)
+
+        for word in strs:
+            key = ''.join(sorted(word))
+            groups[key].append(word)
 
         return list(groups.values())
