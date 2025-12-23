@@ -10,7 +10,7 @@ class Solution(object):
         :type l2: Optional[ListNode]
         :rtype: Optional[ListNode]
         """
-        dummy = ListNode(0)
+        dummy = ListNode()
         carry, curr = 0, dummy
 
         while l1 or l2 or carry:
