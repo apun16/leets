@@ -1,16 +1,20 @@
 class Solution(object):
     def reorderList(self, head):
-        if not head or not head.next: return
+        listi = []
+        curr = head
         
-        slow = fast = head
-        while fast.next and fast.next.next:
-            slow, fast = slow.next, fast.next.next
-        
-        second, prev = slow.next, None
-        slow.next = None
-        while second:
-            second.next, prev, second = prev, second, second.next
-        
-        p1, p2 = head, prev
-        while p2:
-            p1.next, p2.next, p1, p2 = p2, p1.next, p1.next, p2.next
+        while curr:
+            listi.append(curr)
+            curr = curr.next
+
+        left = 0
+        right = len(listi) - 1
+
+        while left < right:
+            listi[left].next = listi[right]
+            left+=1
+            listi[right].next = listi[left]
+            right-=1
+        listi[left].next = None
+         
+        return head
