@@ -1,23 +1,19 @@
 class Solution(object):
     def countElements(self, nums, k):
-        n = len(nums)
-        if n == 0:
-            return 0
         if k == 0:
-            return n
+            return len(nums)
+        if not nums:
+            return 0
         
         nums.sort()
-        count = 0
-        i = 0
         
-        while i < n:
-            j = i
-            while j < n and nums[j] == nums[i]:
-                j += 1
-            
-            greater_count = n - j            
-            if greater_count >= k:
-                count += (j - i)
-            i = j
+        cutoff_index = len(nums) - k
+        cutoff_value = nums[cutoff_index]
+
+        if cutoff_value == nums[0]:
+            return 0
         
-        return count
+        while cutoff_index >= 0 and nums[cutoff_index] == cutoff_value:
+            cutoff_index -= 1
+        
+        return cutoff_index + 1
