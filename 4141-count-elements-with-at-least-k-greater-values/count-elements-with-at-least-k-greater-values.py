@@ -3,22 +3,21 @@ class Solution(object):
         n = len(nums)
         if n == 0:
             return 0
+        if k == 0:
+            return n
         
-        sorted_nums = sorted(nums)
+        nums.sort()
         count = 0
         i = 0
         
         while i < n:
-            val = sorted_nums[i]
             j = i
-            while j < n and sorted_nums[j] == val:
+            while j < n and nums[j] == nums[i]:
                 j += 1
             
-            greater_count = n - j
-            
+            greater_count = n - j            
             if greater_count >= k:
                 count += (j - i)
-            
             i = j
         
         return count
