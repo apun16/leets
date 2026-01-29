@@ -1,83 +1,55 @@
 class Solution {
-    private static final int M = 1000000007;
+    private static final int MOD = 1000000007;
 
-    private int add(int x, int y) {
-        if ((x += y) >= M) {
-            x -= M;
+    private long modPow(long base, long exp) {
+        long res = 1 % MOD;
+        base %= MOD;
+        while (exp > 0) {
+            if ((exp & 1L) == 1L) res = (res * base) % MOD;
+            base = (base * base) % MOD;
+            exp >>= 1;
         }
-        return x;
-    }
-
-    private int mul(long x, long y) {
-        return (int) (x * y % M);
-    }
-
-    private int[] getZ(String s) {
-        int n = s.length();
-        int[] z = new int[n];
-        for (int i = 1, left = 0, right = 0; i < n; ++i) {
-            if (i <= right && z[i - left] <= right - i) {
-                z[i] = z[i - left];
-            } else {
-                int zi = Math.max(0, right - i + 1);
-                while (i + zi < n && s.charAt(i + zi) == s.charAt(zi)) {
-                    zi++;
-                }
-                z[i] = zi;
-            }
-            if (i + z[i] - 1 > right) {
-                left = i;
-                right = i + z[i] - 1;
-            }
-        }
-        return z;
-    }
-
-    private int[][] matrixMultiply(int[][] a, int[][] b) {
-        int m = a.length, n = a[0].length, p = b[0].length;
-        int[][] r = new int[m][p];
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < p; ++j) {
-                for (int k = 0; k < n; ++k) {
-                    r[i][j] = add(r[i][j], mul(a[i][k], b[k][j]));
-                }
-            }
-        }
-        return r;
-    }
-
-    private int[][] matrixPower(int[][] a, long y) {
-        int n = a.length;
-        int[][] r = new int[n][n];
-        for (int i = 0; i < n; ++i) {
-            r[i][i] = 1;
-        }
-        int[][] x = new int[n][n];
-        for (int i = 0; i < n; ++i) {
-            System.arraycopy(a[i], 0, x[i], 0, n);
-        }
-        while (y > 0) {
-            if ((y & 1) == 1) {
-                r = matrixMultiply(r, x);
-            }
-            x = matrixMultiply(x, x);
-            y >>= 1;
-        }
-        return r;
+        return res;
     }
 
     public int numberOfWays(String s, String t, long k) {
         int n = s.length();
-        int[] dp = matrixPower(new int[][] {{0, 1}, {n - 1, n - 2}}, k)[0];
-        s += t + t;
-        int[] z = getZ(s);
-        int m = 2 * n;
-        int result = 0;
-        for (int i = n; i < m; ++i) {
-            if (z[i] >= n) {
-                result = add(result, dp[i - n == 0 ? 0 : 1]);
+        if (t.length() != n) return 0;
+        if (k == 0) return s.equals(t) ? 1 : 0;
+
+        char[] sc = s.toCharArray();
+        char[] tc = t.toCharArray();
+
+        int[] pi = new int[n];
+        for (int i = 1, j = 0; i < n; i++) {
+            while (j > 0 && tc[i] != tc[j]) j = pi[j - 1];
+            if (tc[i] == tc[j]) j++;
+            pi[i] = j;
+        }
+        int totalLen = 2 * n - 1;
+        int c0 = 0, c1 = 0;
+        for (int i = 0, j = 0; i < totalLen; i++) {
+            char c = sc[i < n ? i : i - n];
+            while (j > 0 && c != tc[j]) j = pi[j - 1];
+            if (c == tc[j]) j++;
+            if (j == n) {
+                int start = i - n + 1;
+                if (start == 0) c0++;
+                else c1++;
+                j = pi[j - 1];
             }
         }
-        return result;
+
+        if (c0 == 0 && c1 == 0) return 0;
+        long invN = modPow(n, MOD - 2);
+        long powNm1 = modPow(n - 1, k);
+        long sign = ((k & 1L) == 0) ? MOD - 1 : 1; 
+
+        long f1 = (powNm1 + sign) % MOD;
+        f1 = (f1 * invN) % MOD;
+        long f0 = (f1 + (MOD - sign)) % MOD;
+
+        long ans = ((f0 * c0) % MOD + (f1 * c1) % MOD) % MOD;
+        return (int) ans;
     }
 }
